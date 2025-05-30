@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% extends 'bbs/base.html' %}
+    {% block content %}
+      <h2>{{ post.title }}</h2>
+      <p>{{ post.content }}</p>
+      <p>ジャンル: {{ post.genre }}</p>
+      <p>作成者: {{ post.user.username }}</p>
+      <p>いいね: {{ post.likes }}</p>
+      <a href="{% url 'bbs:post_edit' post.pk %}">編集</a>
+      <a href="{% url 'bbs:post_delete' post.pk %}">削除</a>
+      <a href="{% url 'bbs:post_list' %}">戻る</a>
+    {% endblock %}
+  </body>
+</html>

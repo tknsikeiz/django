@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    {% extends 'bbs/base.html' %}
+
+    {% block content %}
+      <h2>投稿一覧</h2>
+      <a href="{% url 'bbs:post_create' %}">＋ 新規投稿</a>
+
+      {% for post in posts %}
+        <div style="border:1px solid #ccc; padding:10px; margin:10px 0;">
+          <h3><a href="{% url 'bbs:post_detail' post.pk %}">{{ post.title }}</a></h3>
+          <p>
+            <strong>ジャンル:</strong> {{ post.genre }} | <strong>投稿者:</strong> {{ post.user.username }}
+          </p>
+          <p>{{ post.content|truncatechars:100 }}</p>
+          <p>
+            いいね：<span id="like-count-{{ post.id }}">{{ post.likes }}</span>
+          </p>
+          <button onclick="likePost({{ post.id }})">いいね</button>
+        </div>
+      {% endfor %}
+
+      <script>
+        function likePost(postId) {
+          fetch(`/post/${postId}/like/`, {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': '{{ csrf_token }}'
+            }
+          })
+            .then((response) => response.json())
+            .then((data) => {
+              document.getElementById(`like-count-${postId}`).innerText = data.likes
+            })
+        }
+      </script>
+    {% endblock %}
+  </body>
+</html>
